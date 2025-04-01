@@ -1,14 +1,52 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
+import { Button, Form } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../slices/authSlice.js';
 
 const MainPage = () => {
+  const [authFailed, setAuthFailed] = useState(false);
+  const inputRef = useRef();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      inputRef.current.focus();
+    }, []);
+
   const formik = useFormik({
     initialValues: {
-      userName: '',
+      username: '',
       password: '',
     },
-    onSubmit: values => {
+    onSubmit: async (values) => {
       console.log(JSON.stringify(values, null, 2));
+      setAuthFailed(false);
+      try {
+        const res = await axios.post('/api/v1/login', values);
+        localStorage.setItem('userId', JSON.stringify(res.data));
+        dispatch(setCredentials(res.data))
+        console.log(JSON.stringify(res.data))
+        console.log(location);
+        const { from } = location.state;
+        console.log(from)
+        navigate(from);
+
+      } catch (error) {
+        console.log(error.isAxiosError);
+        localStorage.removeItem('userId');
+        if (error.isAxiosError && error.response.status === 401) {
+          setAuthFailed(true);
+          inputRef.current.select();
+          
+          return;
+        }
+        throw error;
+        
+      }
     },
   });
     return (
@@ -20,38 +58,40 @@ const MainPage = () => {
                   <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
                     <img src="avatar.jpg" className="rounded-circle" alt="Войти" />
                   </div>
-                  <form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-md-0">
+                  <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-md-0">
                     <h1 className="text-center mb-4">Войти</h1>
-                    <div className="form-floating mb-3">
-                      <input
+                    <Form.Group className="form-floating mb-3">
+                      <Form.Control
                         type="text"
-                        name="userName"
-                        autoComplete="userName"
+                        name="username"
+                        autoComplete="username"
                         required=""
                         placeholder="Ваш ник" 
-                        id="userName"
-                        className="form-control" 
-                        value={formik.values.userName} 
+                        id="username"
+                        value={formik.values.username} 
                         onChange={formik.handleChange}
+                        isInvalid={authFailed}
+                        ref={inputRef}
                       />
-                      <label htmlFor="userName">Ваш ник</label>
-                    </div>
-                    <div className="form-floating mb-4">
-                      <input
+                      <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                    </Form.Group>
+                    <Form.Group className="form-floating mb-4">
+                      <Form.Control
                         name="password"
                         autoComplete="current-password" 
                         required="" 
                         placeholder="Пароль" 
                         type="password" 
-                        id="password" 
-                        className="form-control" 
+                        id="password"  
                         value={formik.values.password} 
-                        onChange={formik.handleChange}  
+                        onChange={formik.handleChange}
+                        isInvalid={authFailed}  
                       />
-                      <label className="form-label" htmlFor="password">Пароль</label>
-                    </div>
-                    <button type="submit" className="w-100 mb-3 btn btn-outline-primary">Войти</button>
-                  </form>
+                      <Form.Label className="form-label" htmlFor="password">Пароль</Form.Label>
+                      <Form.Control.Feedback type="invalid">the username or password is incorrect</Form.Control.Feedback>
+                    </Form.Group>
+                    <Button type="submit" className="w-100 mb-3" variant="outline-primary">Войти</Button>
+                  </Form>
                 </div>
                 <div className="card-footer p-4">
                   <div className="text-center">
