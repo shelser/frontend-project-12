@@ -23,16 +23,12 @@ const MainPage = () => {
       password: '',
     },
     onSubmit: async (values) => {
-      console.log(JSON.stringify(values, null, 2));
       setAuthFailed(false);
       try {
         const res = await axios.post('/api/v1/login', values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         dispatch(setCredentials(res.data))
-        console.log(JSON.stringify(res.data))
-        console.log(location);
         const { from } = location.state;
-        console.log(from)
         navigate(from);
 
       } catch (error) {
@@ -41,11 +37,9 @@ const MainPage = () => {
         if (error.isAxiosError && error.response.status === 401) {
           setAuthFailed(true);
           inputRef.current.select();
-          
           return;
         }
-        throw error;
-        
+        throw error;        
       }
     },
   });

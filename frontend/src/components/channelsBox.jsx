@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Navbar, ButtonGroup, Form, InputGroup} from 'react-bootstrap';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { actions } from '../slices/channelsSlice.js';
+import { selectChannelId } from '../slices/channelsSlice.js';
 import { useSelector, useDispatch } from 'react-redux';
+import cn from 'classnames';
 
 const ChannelsBox = () => {
+
+  const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
+  const currentChannelId = useSelector(selectChannelId);
   
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -21,7 +27,7 @@ const ChannelsBox = () => {
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.map((channel) =>
           <li key={ channel.id } className="nav-item w-100">
-            <button type="button" className="w-100 rounded-0 text-start btn">
+            <button onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} type="button" className={cn('w-100', 'rounded-0', 'text-start', 'btn', channel.id === currentChannelId ? 'btn-secondary' : null)}>
               <span className="me-1">#</span>
               {channel.name}
             </button>

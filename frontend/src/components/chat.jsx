@@ -12,32 +12,25 @@ import { useSelector, useDispatch } from 'react-redux';
 const Chat = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const channels = useSelector(channelsSelectors.selectAll);
 
   const getAuthHeader = () => {
     const userId = JSON.parse(localStorage.getItem('userId'));
-    /*const userId = localStorage.getItem('userId');*/
-    console.log(userId)
-    console.log(localStorage.getItem('userId'))
       
     if (userId && userId.token) {
       return { Authorization: `Bearer ${userId.token}` };
-    }
-      
+    }  
     return {};
   };
 
   useEffect(() => {
     const fetchContent = async () => {
       const { data } = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
-      console.log(data);
       dispatch(channelsAction.addChannels(data));
     };
 
     fetchContent();
   }, []);
-
-  const channels = useSelector(channelsSelectors.selectAll);
-  console.log(channels);
 
   return (
     <div className="d-flex flex-column h-100">

@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, } from 'react-rout
 import { Provider, useSelector } from 'react-redux'
 
 const ChatRoute = ({ children }) => {
-    const isLogIn = useSelector((state) => state.auth.loggedIn);
     const location = useLocation();
     const userId = JSON.parse(localStorage.getItem('userId'));
   
