@@ -38,29 +38,29 @@ const MessageBox = () => {
   };
   
   const formik = useFormik({
-      initialValues: {
-        body: '',
-      },
-      onSubmit: async (values) => {
-        const newMessage = { body: values, channelId: currentChannelID, username: userId.username };
-        try {
-          const res = await axios.post('/api/v1/messages', newMessage, {
-            headers: {
-              Authorization: `Bearer ${userId.token}`,
-            },
-          });
-          dispatch(actions.addMessage(res.data))
-        } catch (error) {
+    initialValues: {
+      body: '',
+    },
+    onSubmit: async (values) => {
+      const newMessage = { body: values, channelId: currentChannelID, username: userId.username };
+      try {
+        const res = await axios.post('/api/v1/messages', newMessage, {
+          headers: {
+            Authorization: `Bearer ${userId.token}`,
+          },
+        });
+        /*dispatch(actions.addMessage(res.data))*/
+      } catch (error) {
           console.log(error);          
-        }
-      },
-    });
+      }
+    },
+  });
 
-    useEffect(() => {
-      socket.on('newMessage', (messages) => {
-        dispatch(actions.addMessage(messages))
-      });
-    },[])
+  useEffect(() => {
+    socket.on('newMessage', (messages) => {
+      dispatch(actions.addMessage(messages))
+    });
+  },[]);
 
   return (
     <div className="col p-0 h-100">

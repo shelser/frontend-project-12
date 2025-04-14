@@ -7,7 +7,9 @@ import { actions as channelsAction } from '../slices/channelsSlice.js';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
+import Modal from '../modals/Modals.jsx';
 import { useSelector, useDispatch } from 'react-redux';
+
 
 const Chat = () => {
   const location = useLocation();
@@ -33,7 +35,8 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className="d-flex flex-column h-100">
+    <>
+      <div className="d-flex flex-column h-100">
         <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
           <div className="container">
             <Navbar.Brand as={Link} to="/">Secret Chat</Navbar.Brand>
@@ -46,7 +49,9 @@ const Chat = () => {
             <MessageBox />
           </div>  
         </div>
-    </div>
+      </div>
+      <Modal />
+    </>  
   )
 };
 

@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, } from 'react-rout
 import { Provider, useSelector } from 'react-redux'
 
 const ChatRoute = ({ children }) => {
-    const location = useLocation();
-    const userId = JSON.parse(localStorage.getItem('userId'));
+  const location = useLocation();
+  const userId = JSON.parse(localStorage.getItem('userId'));
   
-    return userId && userId.token ? children : <Navigate to="/login" state={{ from: location.pathname }} />
+  return userId && userId.token ? children : <Navigate to="/login" state={{ from: location.pathname }} />
 };
  
 export default ChatRoute;
