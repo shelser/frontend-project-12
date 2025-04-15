@@ -40,7 +40,7 @@ const Chat = () => {
         <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
           <div className="container">
             <Navbar.Brand as={Link} to="/">Secret Chat</Navbar.Brand>
-            <Button as={Link} to="/login" state={{ from: location }}>Выйти</Button>
+            <Button as={Link} to="/login" state={{ from: location }} onClick={() => localStorage.removeItem('userId')}>Выйти</Button>
           </div>
         </Navbar>
         <div className="container h-100 my-4 overflow-hidden rounded shadow">
