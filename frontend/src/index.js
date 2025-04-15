@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const app = async () => {
     const root = ReactDOM.createRoot(document.querySelector('#root'));
-    root.render(init());
+    root.render(await init());
   };
   
   app();

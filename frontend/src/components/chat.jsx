@@ -9,12 +9,14 @@ import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
 import Modal from '../modals/Modals.jsx';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 
 const Chat = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
+  const { t } = useTranslation();
 
   const getAuthHeader = () => {
     const userId = JSON.parse(localStorage.getItem('userId'));
@@ -40,7 +42,7 @@ const Chat = () => {
         <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
           <div className="container">
             <Navbar.Brand as={Link} to="/">Secret Chat</Navbar.Brand>
-            <Button as={Link} to="/login" state={{ from: location }} onClick={() => localStorage.removeItem('userId')}>Выйти</Button>
+            <Button as={Link} to="/login" state={{ from: location }} onClick={() => localStorage.removeItem('userId')}>{t('logout')}</Button>
           </div>
         </Navbar>
         <div className="container h-100 my-4 overflow-hidden rounded shadow">

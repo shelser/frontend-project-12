@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-bootstrap';
 import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
+import { useTranslation } from 'react-i18next';
 
 
 const Remove = () => {
@@ -13,6 +14,8 @@ const Remove = () => {
   const currentChannelID = useSelector(selectChannelId);
   const dispatch = useDispatch();
   const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
+  const { t } = useTranslation();
+
   const removeChannel = (id) => async (e) => {
     e.preventDefault();
     try {
@@ -32,13 +35,13 @@ const Remove = () => {
   return (
     <Modal onHide={hideModal} show container={document.body} centered >
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('delete_channel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className="lead">Уверены?</p>
+        <p className="lead">{t('you_sure')}?</p>
         <div className="d-flex justify-content-end">
-          <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>Отменить</Button>
-          <Button onClick={removeChannel(currentChannelID)} type="button" variant="danger">Удалить</Button>
+          <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>{t('cancel')}</Button>
+          <Button onClick={removeChannel(currentChannelID)} type="button" variant="danger">{t('delete')}</Button>
         </div>
       </Modal.Body>
     </Modal>

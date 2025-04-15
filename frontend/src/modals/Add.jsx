@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-bootstrap';
 import { actions } from '../slices/channelsSlice.js';
+import { useTranslation } from 'react-i18next';
 
 
 const Add = () => {
@@ -14,13 +15,16 @@ const Add = () => {
   const dispatch = useDispatch();
   const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
   const inputRef = useRef();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
       name: '',
     },
     validationSchema: yup.object({
-      name: yup.string().min(3).max(20)
+      name: yup.string().test('length-range',
+        t('errors.string_range', { min: 3, max: 20 }),
+        val => !val || (val.length >= 3 && val.length <= 20)),
     }),
     onSubmit: async (values) => {
       const newChannel = { name: values.name };
@@ -45,7 +49,7 @@ const Add = () => {
   return (
     <Modal onHide={hideModal} show container={document.body} centered >
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('add_channel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -58,13 +62,13 @@ const Add = () => {
               onChange={formik.handleChange}
               ref={inputRef}
             />
-            <Form.Label htmlFor="name" className="visually-hidden">Имя канала</Form.Label>
+            <Form.Label htmlFor="name" className="visually-hidden"></Form.Label>
             {formik.touched.name && formik.errors.name ? (
               <div className="invalid-feedback">{formik.errors.name}</div>
             ) : null}
             <div className="d-flex justify-content-end">
-              <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>Отменить</Button>
-              <Button type="submit">Отправить</Button>
+              <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>{t('cancel')}</Button>
+              <Button type="submit">{t('submit')}</Button>
             </div>
           </Form.Group>
         </Form>

@@ -5,11 +5,14 @@ import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import { actions } from '../slices/usersSlice.js';
 
+
 const Signup = () => {
   
+  const { t } = useTranslation();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const location = useLocation();
@@ -27,7 +30,9 @@ const Signup = () => {
       confirmPassword: '',
     },
     validationSchema: yup.object({
-      username: yup.string().required().min(3).max(20),
+      username: yup.string().required().test('length-range',
+        t('errors.string_range', { min: 3, max: 20 }),
+        val => !val || (val.length >= 3 && val.length <= 20)),
       password: yup.string().required().min(6),
       confirmPassword: yup.string().required().oneOf([yup.ref('password'), null])
     }),
@@ -63,17 +68,17 @@ const Signup = () => {
             <div className="card shadow-sm">
               <div className="card-body row p-5">
                 <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                  <img src="avatar2.jpg" className="rounded-circle" alt="Регистрация" />
+                  <img src="avatar2.jpg" className="rounded-circle" alt={t('registration')} />
                 </div>
                 <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-md-0">
-                  <h1 className="text-center mb-4">Регистрация</h1>
+                  <h1 className="text-center mb-4">{t('registration')}</h1>
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       type="text"
                       name="username"
                       autoComplete="username"
                       required=""
-                      placeholder="Ваш ник" 
+                      placeholder={t('usernamePlaceholder')} 
                       id="username"
                       value={formik.values.username} 
                       onChange={formik.handleChange}
@@ -81,7 +86,7 @@ const Signup = () => {
                       ref={inputRef}
                       onBlur={formik.handleBlur}
                     />
-                    <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                    <Form.Label htmlFor="username">{t('usernamePlaceholder')}</Form.Label>
                     <Form.Control.Feedback type="invalid" tooltip>{formik.errors.username}</Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="form-floating mb-4">
@@ -89,7 +94,7 @@ const Signup = () => {
                       name="password"
                       autoComplete="new-password" 
                       required="" 
-                      placeholder="Пароль" 
+                      placeholder={t('password')} 
                       type="password" 
                       id="password"  
                       value={formik.values.password} 
@@ -97,7 +102,7 @@ const Signup = () => {
                       isInvalid={formik.touched.password && formik.errors.password || authFailed}
                       onBlur={formik.handleBlur}
                     />
-                    <Form.Label className="form-label" htmlFor="password">Пароль</Form.Label>
+                    <Form.Label className="form-label" htmlFor="password">{t('password')}</Form.Label>
                     <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password}</Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="form-floating mb-4">
@@ -105,7 +110,7 @@ const Signup = () => {
                       name="confirmPassword"
                       autoComplete="new-password" 
                       required="" 
-                      placeholder="Пароль" 
+                      placeholder={t('confirmPassword')} 
                       type="password" 
                       id="confirmPassword"  
                       value={formik.values.confirmPassword} 
@@ -113,11 +118,11 @@ const Signup = () => {
                       isInvalid={formik.touched.confirmPassword && formik.errors.confirmPassword || authFailed}
                       onBlur={formik.handleBlur}
                     />
-                    <Form.Label className="form-label" htmlFor="confirmPassword"> Подтвердите пароль</Form.Label>
-                    <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || formik.status}</Form.Control.Feedback>
+                    <Form.Label className="form-label" htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
+                    <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || t('errors.user_already_exists')}</Form.Control.Feedback>
                     
                   </Form.Group>
-                  <Button type="submit" className="w-100 mb-3" variant="outline-primary">Зарегистрироваться</Button>
+                  <Button type="submit" className="w-100 mb-3" variant="outline-primary">{t('signup')}</Button>
                 </Form>
               </div>
             </div>
