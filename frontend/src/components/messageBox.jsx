@@ -9,6 +9,7 @@ import { selectors as messagesSelectors } from '../slices/messagesSlice.js';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js'
 import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
+import filter from 'leo-profanity';
 
 const socket = io('ws://localhost:5002');
 
@@ -22,6 +23,8 @@ const MessageBox = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  filter.add(filter.getDictionary('ru'))
+  
 
   const getCurrentMessages = (messages, currentChannelID) => {
     const currentMessages = Object.values(messages).filter((message) => message.channelId === currentChannelID );
@@ -33,7 +36,7 @@ const MessageBox = () => {
       <div key={message.id} className="text-break mb-2">
         <b>{message.username}</b>
         {': '} 
-        {message.body.body}
+        {message.body}
       </div>
     )
     )
@@ -44,7 +47,7 @@ const MessageBox = () => {
       body: '',
     },
     onSubmit: async (values) => {
-      const newMessage = { body: values, channelId: currentChannelID, username: userId.username };
+      const newMessage = { body: filter.clean(values.body), channelId: currentChannelID, username: userId.username };
       try {
         const res = await axios.post('/api/v1/messages', newMessage, {
           headers: {

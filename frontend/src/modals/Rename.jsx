@@ -10,6 +10,7 @@ import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import filter from 'leo-profanity';
 
 
 const Rename = () => {
@@ -18,6 +19,7 @@ const Rename = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const inputRef = useRef();
   const { t } = useTranslation();
+  filter.add(filter.getDictionary('ru'))
   
   const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
 
@@ -31,7 +33,7 @@ const Rename = () => {
         val => !val || (val.length >= 3 && val.length <= 20)),
     }),
     onSubmit: async (values) => {
-      const editedChannel = { name: values.name };
+      const editedChannel = { name: filter.clean(values.name) };
       console.log(editedChannel)
       try {
         const res = await axios.patch(`/api/v1/channels/${currentChannelID}`, editedChannel, {

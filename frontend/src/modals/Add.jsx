@@ -8,6 +8,7 @@ import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-boots
 import { actions } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import filter from 'leo-profanity';
 
 
 const Add = () => {
@@ -17,6 +18,7 @@ const Add = () => {
   const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
   const inputRef = useRef();
   const { t } = useTranslation();
+  filter.add(filter.getDictionary('ru'));
 
   const formik = useFormik({
     initialValues: {
@@ -28,7 +30,7 @@ const Add = () => {
         val => !val || (val.length >= 3 && val.length <= 20)),
     }),
     onSubmit: async (values) => {
-      const newChannel = { name: values.name };
+      const newChannel = { name: filter.clean(values.name) };
       try {
         const res = await axios.post('/api/v1/channels', newChannel, {
           headers: {
