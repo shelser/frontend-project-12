@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-bootstrap';
 import { actions } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Add = () => {
@@ -35,6 +36,7 @@ const Add = () => {
           },
         });
         dispatch(actions.setCurrentChannelId(res.data.id));
+        toast.success(t('created'));
         hideModal();
       } catch (error) {
         console.log(error);          

@@ -9,6 +9,7 @@ import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-boots
 import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Rename = () => {
@@ -38,6 +39,7 @@ const Rename = () => {
             Authorization: `Bearer ${userId.token}`,
           },
         });
+        toast.success(t('renamed'));
         hideModal();
       } catch (error) {
         console.log(error);          

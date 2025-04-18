@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
 import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 const socket = io('ws://localhost:5002');
 
@@ -63,8 +64,12 @@ const ChannelsBox = () => {
      
     socket.on('renameChannel', (channel) => {
       dispatch(actions.renameChannel({id: channel.id, changes: channel}));
-    })
-      
+    });
+    
+    socket.on('connect_error', () => {
+      toast.error(t('errors.connect_error'))
+    });
+    
     },[]);
   
   return (

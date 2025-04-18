@@ -6,6 +6,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice.js';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 const MainPage = () => {
   const [authFailed, setAuthFailed] = useState(false);
@@ -34,11 +35,16 @@ const MainPage = () => {
         navigate(from);
 
       } catch (error) {
+        if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
+          toast.error(t('errors.error_network'));
+          return
+        }
         if (error.isAxiosError && error.response.status === 401) {
           setAuthFailed(true);
           inputRef.current.select();
           return;
         }
+        console.log(error);
         throw error;        
       }
     },

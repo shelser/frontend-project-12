@@ -6,6 +6,7 @@ import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-boots
 import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Remove = () => {
@@ -25,6 +26,7 @@ const Remove = () => {
         },
       });
       dispatch(actions.setCurrentChannelId('1'));
+      toast.success(t('removed'));
       hideModal();
     } catch (error) {
         console.log(error);          

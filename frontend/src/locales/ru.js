@@ -22,6 +22,9 @@ export default {
     rename_channel: 'Переименовать канал',
     confirmPassword: 'Подтвердите пароль',
     signup: 'Зарегистрироваться',
+    created: "Канал создан",
+    renamed: "Канал переименован",
+    removed: "Канал удалён",
     errors: {
         required: 'Обязательное поле',
         notMatchPassword: 'Пароли должны совпадать',
@@ -31,6 +34,8 @@ export default {
         invalidUsernameOrPassword: 'Неверные имя пользователя или пароль',
         page_not_found: 'Страница не найдена',
         user_already_exists: 'Такой пользователь уже существует',
+        error_network: 'Ошибка соединения или сервер не отвечает',
+        connect_error: 'Ошибка подключения',
     }
   }
 };

@@ -11,6 +11,7 @@ import { Provider, useSelector } from 'react-redux'
 import store from './slices/index.js';
 import resources from './locales/index.js';
 import * as yup from 'yup';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -54,7 +55,9 @@ const init = async () => {
                 </ChatRoute>
               )} 
             />
+            
           </Routes>
+          <ToastContainer /> 
         </BrowserRouter>
       </Provider>
     </I18nextProvider>  
