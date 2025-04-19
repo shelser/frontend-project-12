@@ -9,7 +9,7 @@ import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
 
-const socket = io('ws://localhost:5002');
+const socket = io('ws://localhost:5001');
 
 
 const ChannelsBox = () => {
