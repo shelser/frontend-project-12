@@ -12,6 +12,7 @@ import store from './slices/index.js';
 import resources from './locales/index.js';
 import * as yup from 'yup';
 import { ToastContainer, toast } from 'react-toastify';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
 
 
@@ -38,9 +39,17 @@ const init = async () => {
         max: ({ max }) => i18n.t('errors.string_max', { max }),
         
       },
-    }); 
+    });
+
+    const rollbarConfig = {
+      accessToken: 'f6e35b8b1e464c7a9855a36fd5d5e7c3',
+      environment: 'testenv',
+    };
+    
 
   return (
+    <RollbarProvider config={rollbarConfig}>
+    <ErrorBoundary>
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
         <BrowserRouter>
@@ -60,7 +69,9 @@ const init = async () => {
           <ToastContainer /> 
         </BrowserRouter>
       </Provider>
-    </I18nextProvider>  
+    </I18nextProvider>
+    </ErrorBoundary>
+    </RollbarProvider>
   )
 };
 

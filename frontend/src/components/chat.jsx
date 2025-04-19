@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, Link } from 'react
 import { useFormik } from 'formik';
 import { actions as channelsAction } from '../slices/channelsSlice.js';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { actions as messagesAction } from '../slices/messagesSlice.js';
 import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
 import Modal from '../modals/Modals.jsx';
@@ -28,12 +29,17 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    const fetchContent = async () => {
+    const fetchChannel = async () => {
       const { data } = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
       dispatch(channelsAction.addChannels(data));
     };
+    const fetchMessage = async () => {
+      const { data } = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
+      dispatch(messagesAction.addMessages(data));
+    };  
 
-    fetchContent();
+    fetchChannel();
+    fetchMessage();
   }, []);
 
   return (
