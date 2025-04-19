@@ -12,7 +12,8 @@ import store from './slices/index.js';
 import resources from './locales/index.js';
 import * as yup from 'yup';
 import { ToastContainer, toast } from 'react-toastify';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
+import { Provider as RollbarProvider, ErrorBoundary, } from '@rollbar/react';
+
 
 
 
@@ -42,35 +43,34 @@ const init = async () => {
     });
 
     const rollbarConfig = {
-      accessToken: 'f6e35b8b1e464c7a9855a36fd5d5e7c3',
+      accessToken: '5b58711185ac41e5a70f0c4bcea31943',
       environment: 'testenv',
     };
     
 
   return (
     <RollbarProvider config={rollbarConfig}>
-    <ErrorBoundary>
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<PageNotFound />} />
-            <Route path="login" element={<MainPage />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="/" 
-              element={(
-                <ChatRoute>
-                  <Chat />
-                </ChatRoute>
-              )} 
-            />
-            
-          </Routes>
-          <ToastContainer /> 
-        </BrowserRouter>
-      </Provider>
-    </I18nextProvider>
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <I18nextProvider i18n={i18n}>
+          <Provider store={store}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="*" element={<PageNotFound />} />
+                <Route path="login" element={<MainPage />} />
+                <Route path="signup" element={<Signup />} />
+                <Route path="/" 
+                  element={(
+                    <ChatRoute>
+                      <Chat />
+                    </ChatRoute>
+                  )} 
+                />           
+              </Routes>
+              <ToastContainer /> 
+            </BrowserRouter>
+          </Provider>
+        </I18nextProvider>
+      </ErrorBoundary>
     </RollbarProvider>
   )
 };

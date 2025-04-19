@@ -40,6 +40,7 @@ const Rename = () => {
           headers: {
             Authorization: `Bearer ${userId.token}`,
           },
+          
         });
         toast.success(t('renamed'));
         hideModal();
