@@ -2,13 +2,15 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Navbar } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice.js';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const MainPage = () => {
+
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const location = useLocation();
@@ -33,7 +35,6 @@ const MainPage = () => {
         dispatch(setCredentials(res.data))
         const { from } = location.state;
         navigate(from);
-
       } catch (error) {
         if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
           toast.error(t('errors.error_network'));
@@ -44,12 +45,18 @@ const MainPage = () => {
           inputRef.current.select();
           return;
         }
-        console.log(error);
         throw error;        
       }
     },
   });
     return (
+      <>
+      <div className="d-flex flex-column h-100">
+        <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+          <div className="container">
+            <Navbar.Brand as={Link} to="/">{t('hexletChat')}</Navbar.Brand>
+          </div>
+        </Navbar>
         <div className="container-fluid h-100">
           <div className="row justify-content-center align-content-center h-100">
             <div className="col-12 col-md-8 col-xxl-6">
@@ -103,6 +110,8 @@ const MainPage = () => {
             </div>
           </div>
         </div>
+        </div>
+        </>
     )
   };
 

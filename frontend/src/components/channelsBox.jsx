@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Navbar, ButtonGroup, Form, InputGroup, Dropdown, DropdownButton} from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Button, ButtonGroup, Dropdown,} from 'react-bootstrap';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
@@ -7,10 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
 import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const socket = io();
-
 
 const ChannelsBox = () => {
 
@@ -35,17 +34,19 @@ const ChannelsBox = () => {
       }
       return (
         <li key={ channel.id } className="nav-item w-100">
-        <Dropdown onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} as={ButtonGroup} className="d-flex show">
-          <Button className="w-100 rounded-0 text-start text-truncate" variant={channel.id === currentChannelId ? "secondary" : null}>
-            <span className="me-1">#</span>
-            {channel.name}
-          </Button>
-          <Dropdown.Toggle split variant={channel.id === currentChannelId ? "secondary" : null} id="dropdown-split-basic" />
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => showModal('removing')}>{t('delete')}</Dropdown.Item>
-            <Dropdown.Item onClick={() => showModal('renaming')}>{t('rename')}</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+          <Dropdown onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} as={ButtonGroup} className="d-flex show">
+            <Button className="w-100 rounded-0 text-start text-truncate" variant={channel.id === currentChannelId ? "secondary" : null}>
+              <span className="me-1">#</span>
+              {channel.name}
+            </Button>
+            <Dropdown.Toggle split variant={channel.id === currentChannelId ? "secondary" : null} id="dropdown-split-basic">
+              <span className="visually-hidden">{t('menu')}</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => showModal('removing')}>{t('delete')}</Dropdown.Item>
+              <Dropdown.Item onClick={() => showModal('renaming')}>{t('rename')}</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </li>
       )
     });
@@ -85,15 +86,7 @@ const ChannelsBox = () => {
         </button>
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-      {/*  {channels.map((channel) =>
-          <li key={ channel.id } className="nav-item w-100">
-            <button onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} type="button" className={cn('w-100', 'rounded-0', 'text-start', 'btn', channel.id === currentChannelId ? 'btn-secondary' : null)}>
-              <span className="me-1">#</span>
-              {channel.name}
-            </button>
-            { channel.removable === true ? renderDropdownButton() : null}
-          </li>)} */}
-          {renderButton(channels)}
+        {renderButton(channels)}
       </ul>
     </div>
   )

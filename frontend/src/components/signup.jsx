@@ -1,27 +1,21 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import cn from 'classnames';
-import { actions } from '../slices/usersSlice.js';
-
 
 const Signup = () => {
   
   const { t } = useTranslation();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
-  const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   
   useEffect(() => {
     inputRef.current.focus();
-      }, []);
+  }, []);
   
   const formik = useFormik({
     initialValues: {
@@ -41,7 +35,6 @@ const Signup = () => {
       try {
         const res = await axios.post('/api/v1/signup', values);
         localStorage.setItem('userId', JSON.stringify(res.data));
-        /*dispatch(actions.addUser(res.data))*/
         navigate('/');
       } catch (error) {
           if (error.isAxiosError && error.response.status === 409) {
@@ -59,7 +52,7 @@ const Signup = () => {
     <div className="d-flex flex-column h-100">
       <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
         <div className="container">
-          <Navbar.Brand as={Link} to="/">Secret Chat</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">{t('hexletChat')}</Navbar.Brand>
         </div>
       </Navbar>
       <div className="container-fluid h-100">
@@ -119,10 +112,9 @@ const Signup = () => {
                       onBlur={formik.handleBlur}
                     />
                     <Form.Label className="form-label" htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
-                    <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || t('errors.user_already_exists')}</Form.Control.Feedback>
-                    
+                    <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || t('errors.user_already_exists')}</Form.Control.Feedback>  
                   </Form.Group>
-                  <Button type="submit" className="w-100 mb-3" variant="outline-primary">{t('signup')}</Button>
+                  <Button type="submit" className="w-100 mb-3" variant="outline-primary" disabled={!formik.isValid || formik.isSubmitting}>{t('signup')}</Button>
                 </Form>
               </div>
             </div>

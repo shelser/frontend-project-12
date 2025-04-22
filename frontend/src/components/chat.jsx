@@ -1,22 +1,21 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Navbar, ButtonGroup, Form, InputGroup} from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
-import { useFormik } from 'formik';
+import React, { useEffect } from 'react';
+import { Button, Navbar } from 'react-bootstrap';
+import { useLocation, Link } from 'react-router-dom';
 import { actions as channelsAction } from '../slices/channelsSlice.js';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { actions as messagesAction } from '../slices/messagesSlice.js';
 import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
 import Modal from '../modals/Modals.jsx';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 
 const Chat = () => {
+  
   const location = useLocation();
   const dispatch = useDispatch();
-  const channels = useSelector(channelsSelectors.selectAll);
   const { t } = useTranslation();
 
   const getAuthHeader = () => {
@@ -29,17 +28,19 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    const fetchChannel = async () => {
-      const { data } = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
-      dispatch(channelsAction.addChannels(data));
-    };
-    const fetchMessage = async () => {
-      const { data } = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
-      dispatch(messagesAction.addMessages(data));
-    };  
+    const fetchChat = async () => {
+      try {
+      const channelsResponse = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
+      dispatch(channelsAction.addChannels(channelsResponse.data));
 
-    fetchChannel();
-    fetchMessage();
+      const messagesResponse = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
+      dispatch(messagesAction.addMessages(messagesResponse.data));
+      } catch (error) {
+        toast.error(t('errors.connect_error'));
+        throw error; 
+      }   
+    };
+    fetchChat();
   }, []);
 
   return (
@@ -47,7 +48,7 @@ const Chat = () => {
       <div className="d-flex flex-column h-100">
         <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
           <div className="container">
-            <Navbar.Brand as={Link} to="/">Secret Chat</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">{t('hexletChat')}</Navbar.Brand>
             <Button as={Link} to="/login" state={{ from: location }} onClick={() => localStorage.removeItem('userId')}>{t('logout')}</Button>
           </div>
         </Navbar>

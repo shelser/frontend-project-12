@@ -25,10 +25,19 @@ export default {
     created: "Канал создан",
     renamed: "Канал переименован",
     removed: "Канал удалён",
+    messageCount_zero: "{{count}} сообщений",
+    messageCount_one: "{{count}} сообщение",
+    messageCount_few: "{{count}} сообщения",
+    messageCount_many: "{{count}} сообщений",
+    hexletChat: "Hexlet Chat",
+    menu: "Управление каналом",
+    newMessage: "Новое сообщение",
+    enter_message: 'Введите сообщение...',
+    channelName: "Имя канала",
     errors: {
         required: 'Обязательное поле',
         notMatchPassword: 'Пароли должны совпадать',
-        string_min: 'Минимум {{min}} символов',
+        string_min: 'Не менее {{min}} символов',
         string_max: 'Максимум {{max}} символов',
         string_range: 'От {{min}} до {{max}} символов',
         invalidUsernameOrPassword: 'Неверные имя пользователя или пароль',
@@ -36,6 +45,7 @@ export default {
         user_already_exists: 'Такой пользователь уже существует',
         error_network: 'Ошибка соединения или сервер не отвечает',
         connect_error: 'Ошибка подключения',
+        uniq: "Должно быть уникальным",
     }
   }
 };

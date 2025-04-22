@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import getModal from './index.js';
 import { getModalInfo } from '../slices/channelsSlice.js';
 
@@ -7,7 +7,7 @@ import { getModalInfo } from '../slices/channelsSlice.js';
 const Modal = () => {
 
   const modalInfo = useSelector(getModalInfo);
-  console.log(modalInfo)
+  
   const renderModal = ({ modalInfo, hideModal, setItems }) => {
     if (!modalInfo.type) {
       return null;

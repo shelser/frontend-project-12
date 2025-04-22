@@ -1,12 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFormik } from 'formik';
-import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-bootstrap';
+import { Button, Modal} from 'react-bootstrap';
 import { actions } from '../slices/channelsSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const Remove = () => {
@@ -26,16 +25,18 @@ const Remove = () => {
         },
       });
       dispatch(actions.setCurrentChannelId('1'));
+      dispatch(actions.removeChannel(id.id))
       toast.success(t('removed'));
       hideModal();
     } catch (error) {
-        console.log(error);          
-      }
+        toast.error(t('errors.connect_error'));
+        throw error;           
+    }
     
   };  
 
   return (
-    <Modal onHide={hideModal} show container={document.body} centered >
+    <Modal onHide={hideModal} show container={document.body} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('delete_channel')}</Modal.Title>
       </Modal.Header>

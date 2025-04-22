@@ -1,15 +1,16 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Navbar, ButtonGroup, Form, InputGroup} from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Form, InputGroup} from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { actions } from '../slices/messagesSlice.js';
 import { selectChannelId } from '../slices/channelsSlice.js';
 import { selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js'
+import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
+import { toast } from 'react-toastify';
 
 const socket = io();
 
@@ -17,15 +18,14 @@ const MessageBox = () => {
 
   const allMessage = useSelector(messagesSelectors.selectEntities);
   const currentChannelID = useSelector(selectChannelId);
-  const currentChannelName = useSelector((state) => channelsSelectors.selectById(state, currentChannelID)); // неправильно, исправить
-  /*console.log(currentChannelName);*/ // неправильно, исправить
-  const messageCount = useSelector(messagesSelectors.selectIds); // неправильно, исправить
+  const currentChannelName = useSelector((state) => channelsSelectors.selectById(state, currentChannelID));
+  const messageCount = Object.values(allMessage).filter((message) => message.channelId === currentChannelID); 
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  
   filter.add(filter.getDictionary('ru'))
   
-
   const getCurrentMessages = (messages, currentChannelID) => {
     const currentMessages = Object.values(messages).filter((message) => message.channelId === currentChannelID );
     if (messages.length === 0) {
@@ -46,7 +46,7 @@ const MessageBox = () => {
     initialValues: {
       body: '',
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const newMessage = { body: filter.clean(values.body), channelId: currentChannelID, username: userId.username };
       try {
         const res = await axios.post('/api/v1/messages', newMessage, {
@@ -54,9 +54,11 @@ const MessageBox = () => {
             Authorization: `Bearer ${userId.token}`,
           },
         });
-        /*dispatch(actions.addMessage(res.data))*/
+        dispatch(actions.addMessage(res.data));
+        resetForm();
       } catch (error) {
-          console.log(error);          
+          toast.error(t('errors.connect_error'));
+          throw error;          
       }
     },
   });
@@ -64,7 +66,7 @@ const MessageBox = () => {
   useEffect(() => {
     socket.on('newMessage', (messages) => {
       dispatch(actions.addMessage(messages))
-    });
+    }); 
   },[]);
 
   return (
@@ -72,9 +74,9 @@ const MessageBox = () => {
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
           <p className="m-0">
-            <b># </b> {/*неправильно, исправить*/}
+            <b># {currentChannelName?.name}</b>
           </p>
-          <span className="text-muted">{messageCount.length} сообщений</span>  {/*неправильно, исправить*/}
+          <span className="text-muted">{t('messageCount', {count: messageCount.length})}</span>
         </div>
         <div id="message-box" className="chat-messages overflow-auto px-5">
         {getCurrentMessages(allMessage, currentChannelID)}
@@ -84,8 +86,8 @@ const MessageBox = () => {
             <InputGroup hasValidation>
               <Form.Control
                 name="body" 
-                aria-label="Новое сообщение"
-                placeholder="Введите сообщение..."
+                aria-label={t('newMessage')}
+                placeholder={t('enter_message')}
                 className="border-0 ps-2 p-0"
                 value={formik.values.body} 
                 onChange={formik.handleChange}

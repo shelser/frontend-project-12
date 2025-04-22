@@ -4,11 +4,12 @@ import * as yup from 'yup';
 import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { Button, Navbar, ButtonGroup, Form, InputGroup, Modal} from 'react-bootstrap';
+import { Button, Form, Modal} from 'react-bootstrap';
 import { actions } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
+import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 
 
 const Add = () => {
@@ -19,6 +20,7 @@ const Add = () => {
   const inputRef = useRef();
   const { t } = useTranslation();
   filter.add(filter.getDictionary('ru'));
+  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map((channel) => channel.name);
 
   const formik = useFormik({
     initialValues: {
@@ -27,7 +29,7 @@ const Add = () => {
     validationSchema: yup.object({
       name: yup.string().test('length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        val => !val || (val.length >= 3 && val.length <= 20)),
+        val => !val || (val.length >= 3 && val.length <= 20)).notOneOf(nameChannels),
     }),
     onSubmit: async (values) => {
       const newChannel = { name: filter.clean(values.name) };
@@ -38,10 +40,12 @@ const Add = () => {
           },
         });
         dispatch(actions.setCurrentChannelId(res.data.id));
+        dispatch(actions.addChannel(res.data))
         toast.success(t('created'));
         hideModal();
       } catch (error) {
-        console.log(error);          
+        toast.error(t('errors.connect_error'));
+        throw error;           
       }
     },
   });
@@ -66,13 +70,13 @@ const Add = () => {
               onChange={formik.handleChange}
               ref={inputRef}
             />
-            <Form.Label htmlFor="name" className="visually-hidden"></Form.Label>
-            {formik.touched.name && formik.errors.name ? (
+            <Form.Label htmlFor="name" className="visually-hidden">{t('channelName')}</Form.Label>
+            { formik.errors.name ? (
               <div className="invalid-feedback">{formik.errors.name}</div>
             ) : null}
             <div className="d-flex justify-content-end">
               <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>{t('cancel')}</Button>
-              <Button type="submit">{t('submit')}</Button>
+              <Button type="submit" disabled={!formik.isValid || formik.isSubmitting}>{t('submit')}</Button>
             </div>
           </Form.Group>
         </Form>

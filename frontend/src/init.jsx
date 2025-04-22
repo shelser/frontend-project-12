@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './components/mainPage.jsx';
 import PageNotFound from './components/pageNotFound.jsx';
 import Chat from './components/chat.jsx';
 import ChatRoute from './components/chatRoute.jsx';
 import Signup from './components/signup.jsx';
-import { Provider, useSelector } from 'react-redux'
+import { Provider } from 'react-redux'
 import store from './slices/index.js';
 import resources from './locales/index.js';
 import * as yup from 'yup';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { Provider as RollbarProvider, ErrorBoundary, } from '@rollbar/react';
 
 
@@ -34,6 +34,7 @@ const init = async () => {
       mixed: {
         required: () => i18n.t('errors.required'),
         oneOf: () => i18n.t('errors.notMatchPassword'),
+        notOneOf: () => i18n.t('errors.uniq'),
       },
       string: {
         min: ({ min }) => i18n.t('errors.string_min', { min }),
