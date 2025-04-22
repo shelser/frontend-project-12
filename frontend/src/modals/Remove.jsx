@@ -13,7 +13,7 @@ const Remove = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));  
   const currentChannelID = useSelector(selectChannelId);
   const dispatch = useDispatch();
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
+  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
   const { t } = useTranslation();
 
   const removeChannel = (id) => async (e) => {
@@ -29,7 +29,7 @@ const Remove = () => {
       toast.success(t('removed'));
       hideModal();
     } catch (error) {
-        toast.error(t('errors.connect_error'));
+        toast.error(t('errors.error_network'));
         throw error;           
     }
     

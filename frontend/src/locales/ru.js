@@ -34,6 +34,7 @@ export default {
     newMessage: "Новое сообщение",
     enter_message: 'Введите сообщение...',
     channelName: "Имя канала",
+    username: 'Имя пользователя',
     errors: {
         required: 'Обязательное поле',
         notMatchPassword: 'Пароли должны совпадать',
@@ -43,7 +44,7 @@ export default {
         invalidUsernameOrPassword: 'Неверные имя пользователя или пароль',
         page_not_found: 'Страница не найдена',
         user_already_exists: 'Такой пользователь уже существует',
-        error_network: 'Ошибка соединения или сервер не отвечает',
+        error_network: 'Ошибка соединения',
         connect_error: 'Ошибка подключения',
         uniq: "Должно быть уникальным",
     }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
@@ -12,10 +12,6 @@ const Signup = () => {
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
   
   const formik = useFormik({
     initialValues: {
@@ -71,15 +67,14 @@ const Signup = () => {
                       name="username"
                       autoComplete="username"
                       required=""
-                      placeholder={t('usernamePlaceholder')} 
+                      placeholder={t('username')} 
                       id="username"
                       value={formik.values.username} 
                       onChange={formik.handleChange}
-                      isInvalid={formik.touched.username && formik.errors.username || authFailed}
-                      ref={inputRef}
+                      isInvalid={formik.touched.username && formik.errors.username || authFailed} 
                       onBlur={formik.handleBlur}
                     />
-                    <Form.Label htmlFor="username">{t('usernamePlaceholder')}</Form.Label>
+                    <Form.Label htmlFor="username">{t('username')}</Form.Label>
                     <Form.Control.Feedback type="invalid" tooltip>{formik.errors.username}</Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="form-floating mb-4">

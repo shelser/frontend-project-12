@@ -57,7 +57,7 @@ const MessageBox = () => {
         dispatch(actions.addMessage(res.data));
         resetForm();
       } catch (error) {
-          toast.error(t('errors.connect_error'));
+          toast.error(t('errors.error_network'));
           throw error;          
       }
     },

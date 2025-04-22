@@ -16,7 +16,7 @@ const ChannelsBox = () => {
   const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
   const currentChannelId = useSelector(selectChannelId);
-  const showModal = (type, item = null) => dispatch(actions.setModalInfo({ type, item }));
+  const showModal = (type) => dispatch(actions.setModalInfo({ type }));
   const { t } = useTranslation();
 
 
@@ -68,7 +68,7 @@ const ChannelsBox = () => {
     });
     
     socket.on('connect_error', () => {
-      toast.error(t('errors.connect_error'))
+      toast.error(t('errors.error_network'))
     });
     
     },[]);

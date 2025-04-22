@@ -22,7 +22,7 @@ const Rename = () => {
   const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map((channel) => channel.name);
   filter.add(filter.getDictionary('ru'))
   
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
+  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
 
   const formik = useFormik({
     initialValues: {
@@ -45,7 +45,7 @@ const Rename = () => {
         toast.success(t('renamed'));
         hideModal();
       } catch (error) {
-        toast.error(t('errors.connect_error'));
+        toast.error(t('errors.error_network'));
         throw error;          
       }
     },

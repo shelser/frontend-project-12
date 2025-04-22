@@ -16,7 +16,7 @@ const Add = () => {
 
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null, item: null }));
+  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
   const inputRef = useRef();
   const { t } = useTranslation();
   filter.add(filter.getDictionary('ru'));
@@ -44,7 +44,7 @@ const Add = () => {
         toast.success(t('created'));
         hideModal();
       } catch (error) {
-        toast.error(t('errors.connect_error'));
+        toast.error(t('errors.error_network'));
         throw error;           
       }
     },

@@ -8,13 +8,13 @@ const Modal = () => {
 
   const modalInfo = useSelector(getModalInfo);
   
-  const renderModal = ({ modalInfo, hideModal, setItems }) => {
+  const renderModal = ({ modalInfo }) => {
     if (!modalInfo.type) {
       return null;
     }
   
     const Component = getModal(modalInfo.type);
-    return <Component modalInfo={modalInfo} setItems={setItems} onHide={hideModal} />;
+    return <Component modalInfo={modalInfo} />;
   };
   
   return (
