@@ -109,7 +109,7 @@ const Signup = () => {
                     <Form.Label className="form-label" htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
                     <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || t('errors.user_already_exists')}</Form.Control.Feedback>  
                   </Form.Group>
-                  <Button type="submit" className="w-100 mb-3" variant="outline-primary" disabled={!formik.isValid || formik.isSubmitting}>{t('signup')}</Button>
+                  <Button type="submit" className="w-100 mb-3" variant="outline-primary">{t('signup')}</Button>
                 </Form>
               </div>
             </div>
