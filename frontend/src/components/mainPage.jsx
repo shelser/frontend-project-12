@@ -34,16 +34,16 @@ const MainPage = () => {
         const { from } = location.state;
         navigate(from);
       } catch (error) {
-          if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
-            toast.error(t('errors.error_network'));
-            return;
-          }
-          if (error.isAxiosError && error.response.status === 401) {
-            setAuthFailed(true);
-            inputRef.current.select();
-            return;
-          }
-          throw error;
+        if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
+          toast.error(t('errors.error_network'));
+          return;
+        }
+        if (error.isAxiosError && error.response.status === 401) {
+          setAuthFailed(true);
+          inputRef.current.select();
+          return;
+        }
+        throw error;
       }
     },
   });

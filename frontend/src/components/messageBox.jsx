@@ -8,17 +8,16 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { selectChannelId, selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { selectChannelId, selectors } from '../slices/channelsSlice.js';
 
 const socket = io();
 
 const MessageBox = () => {
   const allMessage = useSelector(messagesSelectors.selectEntities);
   const currentChannelID = useSelector(selectChannelId);
-  const currentChannelName = useSelector((state) =>
-    channelsSelectors.selectById(state, currentChannelID));
-  const messageCount = Object.values(allMessage).filter((message) =>
-    message.channelId === currentChannelID);
+  const currentChannelName = useSelector((state) => selectors.selectById(state, currentChannelID));
+  const messageCount = Object.values(allMessage)
+    .filter((message) => message.channelId === currentChannelID);
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -26,8 +25,8 @@ const MessageBox = () => {
   filter.add(filter.getDictionary('ru'));
 
   const getCurrentMessages = (messages, channelID) => {
-    const currentMessages = Object.values(messages).filter((message) =>
-      message.channelId === channelID);
+    const currentMessages = Object.values(messages)
+      .filter((message) => message.channelId === channelID);
     if (messages.length === 0) {
       return null;
     }
@@ -61,8 +60,8 @@ const MessageBox = () => {
         dispatch(actions.addMessage(res.data));
         resetForm();
       } catch (error) {
-          toast.error(t('errors.error_network'));
-          throw error;
+        toast.error(t('errors.error_network'));
+        throw error;
       }
     },
   });

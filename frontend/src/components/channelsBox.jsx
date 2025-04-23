@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { selectors as channelsSelectors, actions, selectChannelId } from '../slices/channelsSlice.js';
 import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
 import io from 'socket.io-client';
+import { selectors as channelsSelectors, actions, selectChannelId } from '../slices/channelsSlice.js';
 
 const socket = io();
 

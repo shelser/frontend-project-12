@@ -44,8 +44,8 @@ const Add = () => {
         toast.success(t('created'));
         hideModal();
       } catch (error) {
-          toast.error(t('errors.error_network'));
-          throw error;
+        toast.error(t('errors.error_network'));
+        throw error;
       }
     },
   });
