@@ -1,45 +1,41 @@
 import React, { useEffect } from 'react';
-import { Button, ButtonGroup, Dropdown,} from 'react-bootstrap';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import { actions } from '../slices/channelsSlice.js';
-import { selectChannelId } from '../slices/channelsSlice.js';
+import { toast } from 'react-toastify';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
+import { selectors as channelsSelectors, actions, selectChannelId } from '../slices/channelsSlice.js';
 import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
 import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 const socket = io();
 
 const ChannelsBox = () => {
-
   const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
   const currentChannelId = useSelector(selectChannelId);
-  const showModal = (type) => dispatch(actions.setModalInfo({ type }));
+  const showModal = type => dispatch(actions.setModalInfo({ type }));
   const { t } = useTranslation();
 
-
-  const renderButton = (channels) => {
-    const button = channels.map((channel) => {
+  const renderButton = (ch) => {
+    const button = ch.map((channel) => {
       if (channel.removable === false) {
         return (
-          <li key={ channel.id } className="nav-item w-100">
+          <li key={channel.id} className="nav-item w-100">
             <button onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} type="button" className={cn('w-100', 'rounded-0', 'text-start', 'btn', channel.id === currentChannelId ? 'btn-secondary' : null)}>
               <span className="me-1">#</span>
               {channel.name}
             </button>
-          </li>  
-        )
+          </li>
+        );
       }
       return (
-        <li key={ channel.id } className="nav-item w-100">
+        <li key={channel.id} className="nav-item w-100">
           <Dropdown onClick={() => dispatch(actions.setCurrentChannelId(channel.id))} as={ButtonGroup} className="d-flex show">
-            <Button className="w-100 rounded-0 text-start text-truncate" variant={channel.id === currentChannelId ? "secondary" : null}>
+            <Button className="w-100 rounded-0 text-start text-truncate" variant={channel.id === currentChannelId ? 'secondary' : null}>
               <span className="me-1">#</span>
               {channel.name}
             </Button>
-            <Dropdown.Toggle split variant={channel.id === currentChannelId ? "secondary" : null} id="dropdown-split-basic">
+            <Dropdown.Toggle split variant={channel.id === currentChannelId ? 'secondary' : null} id="dropdown-split-basic">
               <span className="visually-hidden">{t('menu')}</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -48,31 +44,29 @@ const ChannelsBox = () => {
             </Dropdown.Menu>
           </Dropdown>
         </li>
-      )
+      );
     });
-    return button
-  }
+    return button;
+  };
 
   useEffect(() => {
-
     socket.on('removeChannel', (id) => {
-      dispatch(actions.removeChannel(id.id))
+      dispatch(actions.removeChannel(id.id));
     });
 
     socket.on('newChannel', (channel) => {
-        dispatch(actions.addChannel(channel))
-      });
-     
+      dispatch(actions.addChannel(channel));
+    });
+
     socket.on('renameChannel', (channel) => {
-      dispatch(actions.renameChannel({id: channel.id, changes: channel}));
+      dispatch(actions.renameChannel({ id: channel.id, changes: channel }));
     });
-    
+
     socket.on('connect_error', () => {
-      toast.error(t('errors.error_network'))
+      toast.error(t('errors.error_network'));
     });
-    
-    },[]);
-  
+  }, [dispatch, t]);
+
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
@@ -89,7 +83,7 @@ const ChannelsBox = () => {
         {renderButton(channels)}
       </ul>
     </div>
-  )
+  );
 };
 
 export default ChannelsBox;

@@ -4,23 +4,20 @@ import * as yup from 'yup';
 import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { Button, Form, Modal} from 'react-bootstrap';
-import { actions } from '../slices/channelsSlice.js';
+import filter from 'leo-profanity';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-
 
 const Add = () => {
-
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
   const inputRef = useRef();
   const { t } = useTranslation();
   filter.add(filter.getDictionary('ru'));
-  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map((channel) => channel.name);
+  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map(channel => channel.name);
 
   const formik = useFormik({
     initialValues: {
@@ -40,12 +37,13 @@ const Add = () => {
           },
         });
         dispatch(actions.setCurrentChannelId(res.data.id));
-        dispatch(actions.addChannel(res.data))
+        dispatch(actions.addChannel(res.data));
         toast.success(t('created'));
         hideModal();
-      } catch (error) {
+      }
+      catch (error) {
         toast.error(t('errors.error_network'));
-        throw error;           
+        throw error;
       }
     },
   });
@@ -55,14 +53,14 @@ const Add = () => {
   }, []);
 
   return (
-    <Modal onHide={hideModal} show container={document.body} centered >
+    <Modal onHide={hideModal} show container={document.body} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('add_channel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group>
-            <Form.Control 
+            <Form.Control
               id="name"
               name="name"
               className={cn('mb-2', formik.errors.name ? 'is-invalid' : null)}
@@ -71,9 +69,9 @@ const Add = () => {
               ref={inputRef}
             />
             <Form.Label htmlFor="name" className="visually-hidden">{t('channelName')}</Form.Label>
-            { formik.errors.name ? (
-              <div className="invalid-feedback">{formik.errors.name}</div>
-            ) : null}
+            {
+              formik.errors.name ? (<div className="invalid-feedback">{formik.errors.name}</div>) : null
+            }
             <div className="d-flex justify-content-end">
               <Button type="button" className="me-2" variant="secondary" onClick={hideModal}>{t('cancel')}</Button>
               <Button type="submit" disabled={!formik.isValid || formik.isSubmitting}>{t('submit')}</Button>
@@ -82,7 +80,7 @@ const Add = () => {
         </Form>
       </Modal.Body>
     </Modal>
-  )
+  );
 };
 
 export default Add;

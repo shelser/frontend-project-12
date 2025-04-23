@@ -1,5 +1,8 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { Button, Navbar } from 'react-bootstrap';
 import { useLocation, Link } from 'react-router-dom';
 import { actions as channelsAction } from '../slices/channelsSlice.js';
@@ -7,41 +10,37 @@ import { actions as messagesAction } from '../slices/messagesSlice.js';
 import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
 import Modal from '../modals/Modals.jsx';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-
 
 const Chat = () => {
-  
   const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const getAuthHeader = () => {
     const userId = JSON.parse(localStorage.getItem('userId'));
-      
+
     if (userId && userId.token) {
       return { Authorization: `Bearer ${userId.token}` };
-    }  
+    }
     return {};
   };
 
   useEffect(() => {
     const fetchChat = async () => {
       try {
-      const channelsResponse = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
-      dispatch(channelsAction.addChannels(channelsResponse.data));
+        const channelsResponse = await axios.get('/api/v1/channels', { headers: getAuthHeader() });
+        dispatch(channelsAction.addChannels(channelsResponse.data));
 
-      const messagesResponse = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
-      dispatch(messagesAction.addMessages(messagesResponse.data));
-      } catch (error) {
+        const messagesResponse = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
+        dispatch(messagesAction.addMessages(messagesResponse.data));
+      }
+      catch (error) {
         toast.error(t('errors.error_network'));
-        throw error; 
-      }   
+        throw error;
+      }
     };
     fetchChat();
-  }, []);
+  }, [dispatch, t]);
 
   return (
     <>
@@ -56,12 +55,12 @@ const Chat = () => {
           <div className="row h-100 bg-white flex-md-row">
             <ChannelsBox />
             <MessageBox />
-          </div>  
+          </div>
         </div>
       </div>
       <Modal />
-    </>  
-  )
+    </>
+  );
 };
 
 export default Chat;

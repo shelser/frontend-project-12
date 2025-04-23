@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    token: null,
-    username: null,
-    loggedIn: false,
-  };
+  token: null,
+  username: null,
+  loggedIn: false,
+};
 
 const authSlice = createSlice({
   name: 'auth',
