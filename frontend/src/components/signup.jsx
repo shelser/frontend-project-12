@@ -19,7 +19,8 @@ const Signup = () => {
       confirmPassword: '',
     },
     validationSchema: yup.object({
-      username: yup.string().required().test('length-range',
+      username: yup.string().required().test(
+        'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
         val => !val || (val.length >= 3 && val.length <= 20)),
       password: yup.string().required().min(6),
@@ -31,15 +32,14 @@ const Signup = () => {
         const res = await axios.post('/api/v1/signup', values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         navigate('/');
-      }
-      catch (error) {
-        if (error.isAxiosError && error.response.status === 409) {
-          setAuthFailed(true);
-          inputRef.current.select();
-          formik.setStatus(error.message);
-          return;
-        }
-        throw error;
+      } catch (error) {
+          if (error.isAxiosError && error.response.status === 409) {
+            setAuthFailed(true);
+            inputRef.current.select();
+            formik.setStatus(error.message);
+            return;
+          }
+          throw error;
       }
     },
   });
@@ -107,7 +107,9 @@ const Signup = () => {
                       onBlur={formik.handleBlur}
                     />
                     <Form.Label className="form-label" htmlFor="confirmPassword">{t('confirmPassword')}</Form.Label>
-                    <Form.Control.Feedback type="invalid" tooltip>{formik.errors.confirmPassword || t('errors.user_already_exists')}</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid" tooltip>
+                      {formik.errors.confirmPassword || t('errors.user_already_exists')}
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Button type="submit" className="w-100 mb-3" variant="outline-primary">{t('signup')}</Button>
                 </Form>

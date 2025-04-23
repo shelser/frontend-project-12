@@ -5,12 +5,12 @@ import { getModalInfo } from '../slices/channelsSlice.js';
 
 const Modal = () => {
   const modalInfo = useSelector(getModalInfo);
-  const renderModal = ({ modalInfo }) => {
+  const renderModal = ({ modalInf }) => {
     if (!modalInfo.type) {
       return null;
     }
     const Component = getModal(modalInfo.type);
-    return <Component modalInfo={modalInfo} />;
+    return <Component modalInfo={modalInf} />;
   };
   return (
     <>

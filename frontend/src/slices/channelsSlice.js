@@ -22,13 +22,13 @@ const channelsSlice = createSlice({
 });
 
 export const selectChannelId = createSelector(
-  [state => state.channels],
-  state => state.currentChannelId,
+  [(state) => state.channels],
+  (state) => state.currentChannelId,
 );
 export const getModalInfo = createSelector(
-  [state => state.channels],
-  state => state.modalInfo,
+  [(state) => state.channels],
+  (state) => state.modalInfo,
 );
 export const { actions } = channelsSlice;
-export const selectors = channelsAdapter.getSelectors(state => state.channels);
+export const selectors = channelsAdapter.getSelectors((state) => state.channels);
 export default channelsSlice.reducer;

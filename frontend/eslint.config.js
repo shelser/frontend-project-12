@@ -3,11 +3,10 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import stylistic from '@stylistic/eslint-plugin';
-import pluginJs from '@eslint/js';
 
 export default [
   stylistic.configs.recommended,
-  pluginJs.configs.recommended,
+  js.configs.recommended,
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],

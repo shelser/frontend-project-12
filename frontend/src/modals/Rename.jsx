@@ -16,7 +16,8 @@ const Rename = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const inputRef = useRef();
   const { t } = useTranslation();
-  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map(channel => channel.name);
+  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
+    .map((channel) => channel.name);
   filter.add(filter.getDictionary('ru'));
 
   const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
@@ -26,9 +27,11 @@ const Rename = () => {
       name: '',
     },
     validationSchema: yup.object({
-      name: yup.string().test('length-range',
+      name: yup.string().test(
+        'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        val => !val || (val.length >= 3 && val.length <= 20)).notOneOf(nameChannels),
+        (val) => !val || (val.length >= 3 && val.length <= 20),
+      ).notOneOf(nameChannels),
     }),
     onSubmit: async (values) => {
       const editedChannel = { name: filter.clean(values.name) };
@@ -41,10 +44,9 @@ const Rename = () => {
         dispatch(actions.renameChannel({ id: res.data.id, changes: res.data }));
         toast.success(t('renamed'));
         hideModal();
-      }
-      catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+      } catch (error) {
+          toast.error(t('errors.error_network'));
+          throw error;
       }
     },
   });

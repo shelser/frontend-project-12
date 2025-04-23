@@ -33,10 +33,9 @@ const Chat = () => {
 
         const messagesResponse = await axios.get('/api/v1/messages', { headers: getAuthHeader() });
         dispatch(messagesAction.addMessages(messagesResponse.data));
-      }
-      catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+      } catch (error) {
+          toast.error(t('errors.error_network'));
+          throw error;
       }
     };
     fetchChat();

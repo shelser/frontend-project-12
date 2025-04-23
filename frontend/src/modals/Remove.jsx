@@ -13,7 +13,7 @@ const Remove = () => {
   const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
   const { t } = useTranslation();
 
-  const removeChannel = id => async (e) => {
+  const removeChannel = (id) => async (e) => {
     e.preventDefault();
     try {
       await axios.delete(`/api/v1/channels/${id}`, {
@@ -25,10 +25,9 @@ const Remove = () => {
       dispatch(actions.removeChannel(id.id));
       toast.success(t('removed'));
       hideModal();
-    }
-    catch (error) {
-      toast.error(t('errors.error_network'));
-      throw error;
+    } catch (error) {
+        toast.error(t('errors.error_network'));
+        throw error;
     }
   };
 

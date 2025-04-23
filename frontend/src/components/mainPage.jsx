@@ -4,9 +4,9 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from '../slices/authSlice.js';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { setCredentials } from '../slices/authSlice.js';
 
 const MainPage = () => {
   const [authFailed, setAuthFailed] = useState(false);
@@ -33,18 +33,17 @@ const MainPage = () => {
         dispatch(setCredentials(res.data));
         const { from } = location.state;
         navigate(from);
-      }
-      catch (error) {
-        if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
-          toast.error(t('errors.error_network'));
-          return;
-        }
-        if (error.isAxiosError && error.response.status === 401) {
-          setAuthFailed(true);
-          inputRef.current.select();
-          return;
-        }
-        throw error;
+      } catch (error) {
+          if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
+            toast.error(t('errors.error_network'));
+            return;
+          }
+          if (error.isAxiosError && error.response.status === 401) {
+            setAuthFailed(true);
+            inputRef.current.select();
+            return;
+          }
+          throw error;
       }
     },
   });

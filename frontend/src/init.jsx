@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import * as yup from 'yup';
+import { ToastContainer } from 'react-toastify';
 import MainPage from './components/mainPage.jsx';
 import PageNotFound from './components/pageNotFound.jsx';
 import Chat from './components/chat.jsx';
@@ -12,7 +13,6 @@ import ChatRoute from './components/chatRoute.jsx';
 import Signup from './components/signup.jsx';
 import store from './slices/index.js';
 import resources from './locales/index.js';
-import { ToastContainer } from 'react-toastify';
 
 const init = async () => {
   const i18n = i18next.createInstance();

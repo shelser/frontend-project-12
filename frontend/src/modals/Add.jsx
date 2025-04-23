@@ -6,9 +6,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
 
 const Add = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -17,16 +17,19 @@ const Add = () => {
   const inputRef = useRef();
   const { t } = useTranslation();
   filter.add(filter.getDictionary('ru'));
-  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll)).map(channel => channel.name);
+  const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
+    .map((channel) => channel.name);
 
   const formik = useFormik({
     initialValues: {
       name: '',
     },
     validationSchema: yup.object({
-      name: yup.string().test('length-range',
+      name: yup.string().test(
+        'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        val => !val || (val.length >= 3 && val.length <= 20)).notOneOf(nameChannels),
+        (val) => !val || (val.length >= 3 && val.length <= 20),
+      ).notOneOf(nameChannels),
     }),
     onSubmit: async (values) => {
       const newChannel = { name: filter.clean(values.name) };
@@ -40,10 +43,9 @@ const Add = () => {
         dispatch(actions.addChannel(res.data));
         toast.success(t('created'));
         hideModal();
-      }
-      catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+      } catch (error) {
+          toast.error(t('errors.error_network'));
+          throw error;
       }
     },
   });
