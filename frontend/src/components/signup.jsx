@@ -5,12 +5,15 @@ import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../contexts/useAuth.jsx';
+import routes from '../routes.js';
 
 const Signup = () => {
   const { t } = useTranslation();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -30,9 +33,10 @@ const Signup = () => {
     onSubmit: async (values) => {
       setAuthFailed(false);
       try {
-        const res = await axios.post('/api/v1/signup', values);
+        const res = await axios.post(routes.usersPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
-        navigate('/');
+        auth.logIn(res.data);
+        navigate(routes.chatPage);
       } catch (error) {
         if (error.isAxiosError && error.response.status === 409) {
           setAuthFailed(true);
@@ -49,7 +53,7 @@ const Signup = () => {
     <div className="d-flex flex-column h-100">
       <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
         <div className="container">
-          <Navbar.Brand as={Link} to="/">{t('hexletChat')}</Navbar.Brand>
+          <Navbar.Brand as={Link} to={routes.chatPage}>{t('hexletChat')}</Navbar.Brand>
         </div>
       </Navbar>
       <div className="container-fluid h-100">

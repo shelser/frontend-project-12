@@ -4,24 +4,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
-import { actions, selectChannelId } from '../slices/channelsSlice.js';
+import { actions } from '../slices/channelsSlice.js';
+import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js';
+import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx';
 
 const Remove = () => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
-  const currentChannelID = useSelector(selectChannelId);
+  const currentChannelID = useSelector((state) => state.ui.currentChannelId);
   const dispatch = useDispatch();
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
+  const hideModal = () => dispatch(closeModal());
   const { t } = useTranslation();
+  const auth = useAuth();
 
   const removeChannel = (id) => async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(`/api/v1/channels/${id}`, {
-        headers: {
-          Authorization: `Bearer ${userId.token}`,
-        },
+      await axios.delete(`${routes.channelsPath()}/${id}`, {
+        headers: auth.getAuthHeader(),
       });
-      dispatch(actions.setCurrentChannelId('1'));
+      dispatch(setCurrentChannelId('1'));
       dispatch(actions.removeChannel(id.id));
       toast.success(t('removed'));
       hideModal();

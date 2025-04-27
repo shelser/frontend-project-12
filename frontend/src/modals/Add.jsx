@@ -9,16 +9,18 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js';
+import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx';
 
 const Add = () => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
+  const hideModal = () => dispatch(closeModal());
   const inputRef = useRef();
   const { t } = useTranslation();
-  filter.add(filter.getDictionary('ru'));
   const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
     .map((channel) => channel.name);
+  const auth = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -34,12 +36,10 @@ const Add = () => {
     onSubmit: async (values) => {
       const newChannel = { name: filter.clean(values.name) };
       try {
-        const res = await axios.post('/api/v1/channels', newChannel, {
-          headers: {
-            Authorization: `Bearer ${userId.token}`,
-          },
+        const res = await axios.post(routes.channelsPath(), newChannel, {
+          headers: auth.getAuthHeader(),
         });
-        dispatch(actions.setCurrentChannelId(res.data.id));
+        dispatch(setCurrentChannelId(res.data.id));
         dispatch(actions.addChannel(res.data));
         toast.success(t('created'));
         hideModal();

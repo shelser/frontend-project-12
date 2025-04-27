@@ -3,18 +3,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Button, Form, Navbar } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { setCredentials } from '../slices/authSlice.js';
+import useAuth from '../contexts/useAuth.jsx';
+import routes from '../routes.js';
 
 const MainPage = () => {
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const auth = useAuth();
 
   useEffect(() => {
     inputRef.current.focus();
@@ -28,9 +28,9 @@ const MainPage = () => {
     onSubmit: async (values) => {
       setAuthFailed(false);
       try {
-        const res = await axios.post('/api/v1/login', values);
+        const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
-        dispatch(setCredentials(res.data));
+        auth.logIn(res.data);
         const { from } = location.state;
         navigate(from);
       } catch (error) {
@@ -51,7 +51,7 @@ const MainPage = () => {
     <div className="d-flex flex-column h-100">
       <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
         <div className="container">
-          <Navbar.Brand as={Link} to="/">{t('hexletChat')}</Navbar.Brand>
+          <Navbar.Brand as={Link} to={routes.chatPage}>{t('hexletChat')}</Navbar.Brand>
         </div>
       </Navbar>
       <div className="container-fluid h-100">
@@ -103,7 +103,7 @@ const MainPage = () => {
                     {t('no_account')}
                     ?
                   </span>
-                  <a href="/signup">{t('registration')}</a>
+                  <a href={routes.signupPage}>{t('registration')}</a>
                 </div>
               </div>
             </div>

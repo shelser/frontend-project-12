@@ -1,28 +1,26 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-import io from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { selectChannelId, selectors } from '../slices/channelsSlice.js';
-
-const socket = io();
+import { selectors } from '../slices/channelsSlice.js';
+import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx';
 
 const MessageBox = () => {
   const allMessage = useSelector(messagesSelectors.selectEntities);
-  const currentChannelID = useSelector(selectChannelId);
+  const currentChannelID = useSelector((state) => state.ui.currentChannelId);
   const currentChannelName = useSelector((state) => selectors.selectById(state, currentChannelID));
   const messageCount = Object.values(allMessage)
     .filter((message) => message.channelId === currentChannelID);
   const userId = JSON.parse(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  filter.add(filter.getDictionary('ru'));
+  const auth = useAuth();
 
   const getCurrentMessages = (messages, channelID) => {
     const currentMessages = Object.values(messages)
@@ -52,10 +50,8 @@ const MessageBox = () => {
         username: userId.username,
       };
       try {
-        const res = await axios.post('/api/v1/messages', newMessage, {
-          headers: {
-            Authorization: `Bearer ${userId.token}`,
-          },
+        const res = await axios.post(routes.messagesPath(), newMessage, {
+          headers: auth.getAuthHeader(),
         });
         dispatch(actions.addMessage(res.data));
         resetForm();
@@ -65,12 +61,6 @@ const MessageBox = () => {
       }
     },
   });
-
-  useEffect(() => {
-    socket.on('newMessage', (messages) => {
-      dispatch(actions.addMessage(messages));
-    });
-  }, [dispatch]);
 
   return (
     <div className="col p-0 h-100">

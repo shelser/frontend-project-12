@@ -1,20 +1,19 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import getModal from './index.js';
-import { getModalInfo } from '../slices/channelsSlice.js';
 
 const Modal = () => {
-  const modalInfo = useSelector(getModalInfo);
-  const renderModal = ({ modalInf }) => {
+  const modalInfo = useSelector((state) => state.ui.modal);
+  const renderModal = (type) => {
     if (!modalInfo.type) {
       return null;
     }
     const Component = getModal(modalInfo.type);
-    return <Component modalInfo={modalInf} />;
+    return <Component modalInfo={type} />;
   };
   return (
     <>
-      {renderModal({ modalInfo })}
+      {renderModal(modalInfo.type)}
     </>
   );
 };

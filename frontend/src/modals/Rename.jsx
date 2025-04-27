@@ -8,19 +8,20 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { actions, selectChannelId, selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
+import { closeModal } from '../slices/modalSlice.js';
+import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx';
 
 const Rename = () => {
   const dispatch = useDispatch();
-  const currentChannelID = useSelector(selectChannelId);
-  const userId = JSON.parse(localStorage.getItem('userId'));
+  const currentChannelID = useSelector((state) => state.ui.currentChannelId);
   const inputRef = useRef();
   const { t } = useTranslation();
   const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
     .map((channel) => channel.name);
-  filter.add(filter.getDictionary('ru'));
-
-  const hideModal = () => dispatch(actions.setModalInfo({ type: null }));
+  const auth = useAuth();
+  const hideModal = () => dispatch(closeModal());
 
   const formik = useFormik({
     initialValues: {
@@ -36,10 +37,8 @@ const Rename = () => {
     onSubmit: async (values) => {
       const editedChannel = { name: filter.clean(values.name) };
       try {
-        const res = await axios.patch(`/api/v1/channels/${currentChannelID}`, editedChannel, {
-          headers: {
-            Authorization: `Bearer ${userId.token}`,
-          },
+        const res = await axios.patch(`${routes.channelsPath()}/${currentChannelID}`, editedChannel, {
+          headers: auth.getAuthHeader(),
         });
         dispatch(actions.renameChannel({ id: res.data.id, changes: res.data }));
         toast.success(t('renamed'));

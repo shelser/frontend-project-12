@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import * as yup from 'yup';
 import { ToastContainer } from 'react-toastify';
+import filter from 'leo-profanity';
 import MainPage from './components/mainPage.jsx';
 import PageNotFound from './components/pageNotFound.jsx';
 import Chat from './components/chat.jsx';
@@ -13,8 +14,12 @@ import ChatRoute from './components/chatRoute.jsx';
 import Signup from './components/signup.jsx';
 import store from './slices/index.js';
 import resources from './locales/index.js';
+import AuthProvider from './components/authProvider.jsx';
+import Socket from './components/socket.jsx';
+import routes from './routes.js';
 
 const init = async () => {
+  filter.add(filter.getDictionary('ru'));
   const i18n = i18next.createInstance();
 
   await i18n
@@ -38,35 +43,41 @@ const init = async () => {
   });
 
   const rollbarConfig = {
-    accessToken: '5b58711185ac41e5a70f0c4bcea31943',
-    environment: 'testenv',
+    accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
+    environment: import.meta.env.MODE,
   };
 
   return (
-    <RollbarProvider config={rollbarConfig}>
-      <ErrorBoundary>
-        <I18nextProvider i18n={i18n}>
-          <Provider store={store}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="*" element={<PageNotFound />} />
-                <Route path="login" element={<MainPage />} />
-                <Route path="signup" element={<Signup />} />
-                <Route
-                  path="/"
-                  element={(
-                    <ChatRoute>
-                      <Chat />
-                    </ChatRoute>
-                  )}
-                />
-              </Routes>
-              <ToastContainer />
-            </BrowserRouter>
-          </Provider>
-        </I18nextProvider>
-      </ErrorBoundary>
-    </RollbarProvider>
+    <StrictMode>
+      <RollbarProvider config={rollbarConfig}>
+        <ErrorBoundary>
+          <I18nextProvider i18n={i18n}>
+            <AuthProvider>
+              <Provider store={store}>
+                <Socket>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route path={routes.notFound} element={<PageNotFound />} />
+                      <Route path={routes.mainPage} element={<MainPage />} />
+                      <Route path={routes.signupPage} element={<Signup />} />
+                      <Route
+                        path={routes.chatPage}
+                        element={(
+                          <ChatRoute>
+                            <Chat />
+                          </ChatRoute>
+                        )}
+                      />
+                    </Routes>
+                    <ToastContainer />
+                  </BrowserRouter>
+                </Socket>
+              </Provider>
+            </AuthProvider>
+          </I18nextProvider>
+        </ErrorBoundary>
+      </RollbarProvider>
+    </StrictMode>
   );
 };
 

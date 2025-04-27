@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import routes from '../routes.js';
 
 const PageNotFound = () => {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ const PageNotFound = () => {
         <div className="d-flex flex-column h-100">
           <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
             <div className="container">
-              <a className="navbar-brand" href="/">{t('hexletChat')}</a>
+              <a className="navbar-brand" href={routes.chatPage}>{t('hexletChat')}</a>
             </div>
           </nav>
           <div className="text-center">
@@ -18,7 +19,7 @@ const PageNotFound = () => {
             <h1 className="h4 text-muted">{t('errors.page_not_found')}</h1>
             <p className="text-muted">
               {t('go_over')}
-              <a href="/">
+              <a href={routes.chatPage}>
                 {t('main_page')}
               </a>
             </p>
