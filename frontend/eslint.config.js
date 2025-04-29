@@ -15,9 +15,7 @@ export default [
     ],
   },
 
-
   js.configs.recommended,
-
 
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -58,18 +56,16 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'react/prop-types': 'off',
 
-
       '@stylistic/indent': ['error', 2],
       '@stylistic/jsx-indent': ['error', 2],
       '@stylistic/semi': ['error', 'never'],
       '@stylistic/jsx-quotes': ['error', 'prefer-double'],
       '@stylistic/arrow-parens': ['error', 'as-needed', {
-        'requireForBlockBody': true
+        requireForBlockBody: true,
       }],
       '@stylistic/brace-style': ['error', 'stroustrup', {
-        'allowSingleLine': false
+        allowSingleLine: false,
       }],
-
 
       'import/order': [
         'error',
@@ -79,7 +75,6 @@ export default [
           'alphabetize': { order: 'asc', caseInsensitive: true },
         },
       ],
-
 
       'no-console': 'warn',
       'no-unused-vars': 'warn',
