@@ -1,20 +1,20 @@
-import axios from 'axios';
-import { useFormik } from 'formik';
-import { useRef, useState } from 'react';
-import { Button, Form, Navbar } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';
-import * as yup from 'yup';
+import axios from 'axios'
+import { useFormik } from 'formik'
+import { useRef, useState } from 'react'
+import { Button, Form, Navbar } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, Link } from 'react-router-dom'
+import * as yup from 'yup'
 
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx'
+import routes from '../routes.js'
 
 const Signup = () => {
-  const { t } = useTranslation();
-  const [authFailed, setAuthFailed] = useState(false);
-  const inputRef = useRef();
-  const navigate = useNavigate();
-  const auth = useAuth();
+  const { t } = useTranslation()
+  const [authFailed, setAuthFailed] = useState(false)
+  const inputRef = useRef()
+  const navigate = useNavigate()
+  const auth = useAuth()
 
   const formik = useFormik({
     initialValues: {
@@ -26,29 +26,30 @@ const Signup = () => {
       username: yup.string().required().test(
         'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        (val) => !val || (val.length >= 3 && val.length <= 20),
+        val => !val || (val.length >= 3 && val.length <= 20),
       ),
       password: yup.string().required().min(6),
       confirmPassword: yup.string().required().oneOf([yup.ref('password'), null]),
     }),
     onSubmit: async (values) => {
-      setAuthFailed(false);
+      setAuthFailed(false)
       try {
-        const res = await axios.post(routes.usersPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        auth.logIn(res.data);
-        navigate(routes.chatPage);
-      } catch (error) {
+        const res = await axios.post(routes.usersPath(), values)
+        localStorage.setItem('userId', JSON.stringify(res.data))
+        auth.logIn(res.data)
+        navigate(routes.chatPage)
+      }
+      catch (error) {
         if (error.isAxiosError && error.response.status === 409) {
-          setAuthFailed(true);
-          inputRef.current.select();
-          formik.setStatus(error.message);
-          return;
+          setAuthFailed(true)
+          inputRef.current.select()
+          formik.setStatus(error.message)
+          return
         }
-        throw error;
+        throw error
       }
     },
-  });
+  })
 
   return (
     <div className="d-flex flex-column h-100">
@@ -127,7 +128,7 @@ const Signup = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup

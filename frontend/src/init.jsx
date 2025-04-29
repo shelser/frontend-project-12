@@ -1,27 +1,27 @@
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
-import i18next from 'i18next';
-import filter from 'leo-profanity';
-import { StrictMode } from 'react';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { Provider } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import * as yup from 'yup';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
+import i18next from 'i18next'
+import filter from 'leo-profanity'
+import { StrictMode } from 'react'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { Provider } from 'react-redux'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import * as yup from 'yup'
 
-import AuthProvider from './components/authProvider.jsx';
-import Chat from './components/chat.jsx';
-import ChatRoute from './components/chatRoute.jsx';
-import MainPage from './components/mainPage.jsx';
-import PageNotFound from './components/pageNotFound.jsx';
-import Signup from './components/signup.jsx';
-import Socket from './components/socket.jsx';
-import resources from './locales/index.js';
-import routes from './routes.js';
-import store from './slices/index.js';
+import AuthProvider from './components/authProvider.jsx'
+import Chat from './components/chat.jsx'
+import ChatRoute from './components/chatRoute.jsx'
+import MainPage from './components/mainPage.jsx'
+import PageNotFound from './components/pageNotFound.jsx'
+import Signup from './components/signup.jsx'
+import Socket from './components/socket.jsx'
+import resources from './locales/index.js'
+import routes from './routes.js'
+import store from './slices/index.js'
 
 const init = async () => {
-  filter.add(filter.getDictionary('ru'));
-  const i18n = i18next.createInstance();
+  filter.add(filter.getDictionary('ru'))
+  const i18n = i18next.createInstance()
 
   await i18n
     .use(initReactI18next)
@@ -29,7 +29,7 @@ const init = async () => {
       resources,
       fallbackLng: 'ru',
       debug: true,
-    });
+    })
 
   yup.setLocale({
     mixed: {
@@ -41,12 +41,12 @@ const init = async () => {
       min: ({ min }) => i18n.t('errors.string_min', { min }),
       max: ({ max }) => i18n.t('errors.string_max', { max }),
     },
-  });
+  })
 
   const rollbarConfig = {
     accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
     environment: import.meta.env.MODE,
-  };
+  }
 
   return (
     <StrictMode>
@@ -79,7 +79,7 @@ const init = async () => {
         </ErrorBoundary>
       </RollbarProvider>
     </StrictMode>
-  );
-};
+  )
+}
 
-export default init;
+export default init

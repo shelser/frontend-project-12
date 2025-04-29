@@ -1,8 +1,8 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter } from '@reduxjs/toolkit'
 
-const channelsAdapter = createEntityAdapter();
+const channelsAdapter = createEntityAdapter()
 
-const initialState = channelsAdapter.getInitialState();
+const initialState = channelsAdapter.getInitialState()
 
 const channelsSlice = createSlice({
   name: 'channels',
@@ -13,8 +13,8 @@ const channelsSlice = createSlice({
     removeChannel: channelsAdapter.removeOne,
     renameChannel: channelsAdapter.updateOne,
   },
-});
+})
 
-export const { actions } = channelsSlice;
-export const selectors = channelsAdapter.getSelectors((state) => state.channels);
-export default channelsSlice.reducer;
+export const { actions } = channelsSlice
+export const selectors = channelsAdapter.getSelectors(state => state.channels)
+export default channelsSlice.reducer

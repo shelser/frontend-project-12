@@ -1,43 +1,43 @@
-import axios from 'axios';
-import { useFormik } from 'formik';
-import filter from 'leo-profanity';
-import { Form, InputGroup } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import axios from 'axios'
+import { useFormik } from 'formik'
+import filter from 'leo-profanity'
+import { Form, InputGroup } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
-import { selectors } from '../slices/channelsSlice.js';
-import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
+import useAuth from '../contexts/useAuth.jsx'
+import routes from '../routes.js'
+import { selectors } from '../slices/channelsSlice.js'
+import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js'
 
 const MessageBox = () => {
-  const allMessage = useSelector(messagesSelectors.selectEntities);
-  const currentChannelID = useSelector((state) => state.ui.currentChannelId);
-  const currentChannelName = useSelector((state) => selectors.selectById(state, currentChannelID));
+  const allMessage = useSelector(messagesSelectors.selectEntities)
+  const currentChannelID = useSelector(state => state.ui.currentChannelId)
+  const currentChannelName = useSelector(state => selectors.selectById(state, currentChannelID))
   const messageCount = Object.values(allMessage)
-    .filter((message) => message.channelId === currentChannelID);
-  const userId = JSON.parse(localStorage.getItem('userId'));
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const auth = useAuth();
+    .filter(message => message.channelId === currentChannelID)
+  const userId = JSON.parse(localStorage.getItem('userId'))
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+  const auth = useAuth()
 
   const getCurrentMessages = (messages, channelID) => {
     const currentMessages = Object.values(messages)
-      .filter((message) => message.channelId === channelID);
+      .filter(message => message.channelId === channelID)
     if (messages.length === 0) {
-      return null;
+      return null
     }
     return (
-      currentMessages.map((message) => (
+      currentMessages.map(message => (
         <div key={message.id} className="text-break mb-2">
           <b>{message.username}</b>
           {': '}
           {message.body}
         </div>
       ))
-    );
-  };
+    )
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -48,19 +48,20 @@ const MessageBox = () => {
         body: filter.clean(values.body),
         channelId: currentChannelID,
         username: userId.username,
-      };
+      }
       try {
         const res = await axios.post(routes.messagesPath(), newMessage, {
           headers: auth.getAuthHeader(),
-        });
-        dispatch(actions.addMessage(res.data));
-        resetForm();
-      } catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+        })
+        dispatch(actions.addMessage(res.data))
+        resetForm()
+      }
+      catch (error) {
+        toast.error(t('errors.error_network'))
+        throw error
       }
     },
-  });
+  })
 
   return (
     <div className="col p-0 h-100">
@@ -99,7 +100,7 @@ const MessageBox = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MessageBox;
+export default MessageBox

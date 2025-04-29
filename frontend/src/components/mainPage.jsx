@@ -1,25 +1,25 @@
-import axios from 'axios';
-import { useFormik } from 'formik';
-import { useEffect, useRef, useState } from 'react';
-import { Button, Form, Navbar } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import axios from 'axios'
+import { useFormik } from 'formik'
+import { useEffect, useRef, useState } from 'react'
+import { Button, Form, Navbar } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
+import useAuth from '../contexts/useAuth.jsx'
+import routes from '../routes.js'
 
 const MainPage = () => {
-  const [authFailed, setAuthFailed] = useState(false);
-  const inputRef = useRef();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const auth = useAuth();
+  const [authFailed, setAuthFailed] = useState(false)
+  const inputRef = useRef()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const auth = useAuth()
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    inputRef.current.focus()
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -27,27 +27,28 @@ const MainPage = () => {
       password: '',
     },
     onSubmit: async (values) => {
-      setAuthFailed(false);
+      setAuthFailed(false)
       try {
-        const res = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        auth.logIn(res.data);
-        const { from } = location.state;
-        navigate(from);
-      } catch (error) {
+        const res = await axios.post(routes.loginPath(), values)
+        localStorage.setItem('userId', JSON.stringify(res.data))
+        auth.logIn(res.data)
+        const { from } = location.state
+        navigate(from)
+      }
+      catch (error) {
         if (error.code === 'ERR_NETWORK' || error.response.status === 500) {
-          toast.error(t('errors.error_network'));
-          return;
+          toast.error(t('errors.error_network'))
+          return
         }
         if (error.isAxiosError && error.response.status === 401) {
-          setAuthFailed(true);
-          inputRef.current.select();
-          return;
+          setAuthFailed(true)
+          inputRef.current.select()
+          return
         }
-        throw error;
+        throw error
       }
     },
-  });
+  })
   return (
     <div className="d-flex flex-column h-100">
       <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
@@ -112,7 +113,7 @@ const MainPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MainPage;
+export default MainPage

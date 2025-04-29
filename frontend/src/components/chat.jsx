@@ -1,25 +1,25 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-import { Button, Navbar } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { useLocation, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import axios from 'axios'
+import { useEffect } from 'react'
+import { Button, Navbar } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { useLocation, Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import useAuth from '../contexts/useAuth.jsx';
-import Modal from '../modals/Modals.jsx';
-import routes from '../routes.js';
-import { actions as channelsAction } from '../slices/channelsSlice.js';
-import { actions as messagesAction } from '../slices/messagesSlice.js';
+import useAuth from '../contexts/useAuth.jsx'
+import Modal from '../modals/Modals.jsx'
+import routes from '../routes.js'
+import { actions as channelsAction } from '../slices/channelsSlice.js'
+import { actions as messagesAction } from '../slices/messagesSlice.js'
 
-import ChannelsBox from './channelsBox.jsx';
-import MessageBox from './messageBox.jsx';
+import ChannelsBox from './channelsBox.jsx'
+import MessageBox from './messageBox.jsx'
 
 const Chat = () => {
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const auth = useAuth();
+  const location = useLocation()
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+  const auth = useAuth()
 
   useEffect(() => {
     const fetchChat = async () => {
@@ -27,17 +27,18 @@ const Chat = () => {
         const [channelsResponse, messagesResponse] = await Promise.all([
           axios.get(routes.channelsPath(), { headers: auth.getAuthHeader() }),
           axios.get(routes.messagesPath(), { headers: auth.getAuthHeader() }),
-        ]);
+        ])
 
-        dispatch(channelsAction.addChannels(channelsResponse.data));
-        dispatch(messagesAction.addMessages(messagesResponse.data));
-      } catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+        dispatch(channelsAction.addChannels(channelsResponse.data))
+        dispatch(messagesAction.addMessages(messagesResponse.data))
       }
-    };
-    fetchChat();
-  }, [auth, dispatch, t]);
+      catch (error) {
+        toast.error(t('errors.error_network'))
+        throw error
+      }
+    }
+    fetchChat()
+  }, [auth, dispatch, t])
 
   return (
     <>
@@ -57,7 +58,7 @@ const Chat = () => {
       </div>
       <Modal />
     </>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat

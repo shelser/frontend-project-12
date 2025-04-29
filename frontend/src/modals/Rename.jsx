@@ -1,28 +1,28 @@
-import axios from 'axios';
-import cn from 'classnames';
-import { useFormik } from 'formik';
-import filter from 'leo-profanity';
-import { useEffect, useRef } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import * as yup from 'yup';
+import axios from 'axios'
+import cn from 'classnames'
+import { useFormik } from 'formik'
+import filter from 'leo-profanity'
+import { useEffect, useRef } from 'react'
+import { Button, Form, Modal } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import * as yup from 'yup'
 
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
-import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import { closeModal } from '../slices/modalSlice.js';
+import useAuth from '../contexts/useAuth.jsx'
+import routes from '../routes.js'
+import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js'
+import { closeModal } from '../slices/modalSlice.js'
 
 const Rename = () => {
-  const dispatch = useDispatch();
-  const currentChannelID = useSelector((state) => state.ui.currentChannelId);
-  const inputRef = useRef();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const currentChannelID = useSelector(state => state.ui.currentChannelId)
+  const inputRef = useRef()
+  const { t } = useTranslation()
   const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
-    .map((channel) => channel.name);
-  const auth = useAuth();
-  const hideModal = () => dispatch(closeModal());
+    .map(channel => channel.name)
+  const auth = useAuth()
+  const hideModal = () => dispatch(closeModal())
 
   const formik = useFormik({
     initialValues: {
@@ -32,28 +32,29 @@ const Rename = () => {
       name: yup.string().test(
         'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        (val) => !val || (val.length >= 3 && val.length <= 20),
+        val => !val || (val.length >= 3 && val.length <= 20),
       ).notOneOf(nameChannels),
     }),
     onSubmit: async (values) => {
-      const editedChannel = { name: filter.clean(values.name) };
+      const editedChannel = { name: filter.clean(values.name) }
       try {
         const res = await axios.patch(`${routes.channelsPath()}/${currentChannelID}`, editedChannel, {
           headers: auth.getAuthHeader(),
-        });
-        dispatch(actions.renameChannel({ id: res.data.id, changes: res.data }));
-        toast.success(t('renamed'));
-        hideModal();
-      } catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+        })
+        dispatch(actions.renameChannel({ id: res.data.id, changes: res.data }))
+        toast.success(t('renamed'))
+        hideModal()
+      }
+      catch (error) {
+        toast.error(t('errors.error_network'))
+        throw error
       }
     },
-  });
+  })
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    inputRef.current.focus()
+  }, [])
 
   return (
     <Modal onHide={hideModal} show container={document.body} centered>
@@ -81,7 +82,7 @@ const Rename = () => {
         </Form>
       </Modal.Body>
     </Modal>
-  );
-};
+  )
+}
 
-export default Rename;
+export default Rename

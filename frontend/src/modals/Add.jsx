@@ -1,27 +1,27 @@
-import axios from 'axios';
-import cn from 'classnames';
-import { useFormik } from 'formik';
-import filter from 'leo-profanity';
-import { useEffect, useRef } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import * as yup from 'yup';
+import axios from 'axios'
+import cn from 'classnames'
+import { useFormik } from 'formik'
+import filter from 'leo-profanity'
+import { useEffect, useRef } from 'react'
+import { Button, Form, Modal } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import * as yup from 'yup'
 
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
-import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js';
+import useAuth from '../contexts/useAuth.jsx'
+import routes from '../routes.js'
+import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js'
+import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js'
 
 const Add = () => {
-  const dispatch = useDispatch();
-  const hideModal = () => dispatch(closeModal());
-  const inputRef = useRef();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const hideModal = () => dispatch(closeModal())
+  const inputRef = useRef()
+  const { t } = useTranslation()
   const nameChannels = Object.values(useSelector(channelsSelectors.selectAll))
-    .map((channel) => channel.name);
-  const auth = useAuth();
+    .map(channel => channel.name)
+  const auth = useAuth()
 
   const formik = useFormik({
     initialValues: {
@@ -31,29 +31,30 @@ const Add = () => {
       name: yup.string().test(
         'length-range',
         t('errors.string_range', { min: 3, max: 20 }),
-        (val) => !val || (val.length >= 3 && val.length <= 20),
+        val => !val || (val.length >= 3 && val.length <= 20),
       ).notOneOf(nameChannels),
     }),
     onSubmit: async (values) => {
-      const newChannel = { name: filter.clean(values.name) };
+      const newChannel = { name: filter.clean(values.name) }
       try {
         const res = await axios.post(routes.channelsPath(), newChannel, {
           headers: auth.getAuthHeader(),
-        });
-        dispatch(setCurrentChannelId(res.data.id));
-        dispatch(actions.addChannel(res.data));
-        toast.success(t('created'));
-        hideModal();
-      } catch (error) {
-        toast.error(t('errors.error_network'));
-        throw error;
+        })
+        dispatch(setCurrentChannelId(res.data.id))
+        dispatch(actions.addChannel(res.data))
+        toast.success(t('created'))
+        hideModal()
+      }
+      catch (error) {
+        toast.error(t('errors.error_network'))
+        throw error
       }
     },
-  });
+  })
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    inputRef.current.focus()
+  }, [])
 
   return (
     <Modal onHide={hideModal} show container={document.body} centered>
@@ -83,7 +84,7 @@ const Add = () => {
         </Form>
       </Modal.Body>
     </Modal>
-  );
-};
+  )
+}
 
-export default Add;
+export default Add

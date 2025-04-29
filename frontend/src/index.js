@@ -1,11 +1,11 @@
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client'
 
-import init from './init';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import init from './init'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const app = async () => {
-  const root = ReactDOM.createRoot(document.querySelector('#root'));
-  root.render(await init());
-};
+  const root = ReactDOM.createRoot(document.querySelector('#root'))
+  root.render(await init())
+}
 
-app();
+app()

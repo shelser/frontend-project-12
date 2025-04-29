@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
-import routes from '../routes.js';
+import routes from '../routes.js'
 
 const PageNotFound = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="h-100">
@@ -27,7 +27,7 @@ const PageNotFound = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PageNotFound;
+export default PageNotFound

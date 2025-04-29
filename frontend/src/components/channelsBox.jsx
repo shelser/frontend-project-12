@@ -1,17 +1,17 @@
-import cn from 'classnames';
-import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
+import cn from 'classnames'
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import { openModal, setCurrentChannelId } from '../slices/modalSlice.js';
+import { selectors as channelsSelectors } from '../slices/channelsSlice.js'
+import { openModal, setCurrentChannelId } from '../slices/modalSlice.js'
 
 const ChannelsBox = () => {
-  const dispatch = useDispatch();
-  const channels = useSelector(channelsSelectors.selectAll);
-  const currentChannelId = useSelector((state) => state.ui.currentChannelId);
-  const showModal = (type) => dispatch(openModal(type));
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const channels = useSelector(channelsSelectors.selectAll)
+  const currentChannelId = useSelector(state => state.ui.currentChannelId)
+  const showModal = type => dispatch(openModal(type))
+  const { t } = useTranslation()
 
   const renderButton = (ch) => {
     const button = ch.map((channel) => {
@@ -23,7 +23,7 @@ const ChannelsBox = () => {
               {channel.name}
             </button>
           </li>
-        );
+        )
       }
       return (
         <li key={channel.id} className="nav-item w-100">
@@ -41,10 +41,10 @@ const ChannelsBox = () => {
             </Dropdown.Menu>
           </Dropdown>
         </li>
-      );
-    });
-    return button;
-  };
+      )
+    })
+    return button
+  }
 
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -62,7 +62,7 @@ const ChannelsBox = () => {
         {renderButton(channels)}
       </ul>
     </div>
-  );
-};
+  )
+}
 
-export default ChannelsBox;
+export default ChannelsBox
