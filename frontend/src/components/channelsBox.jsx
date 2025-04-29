@@ -1,8 +1,8 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { openModal, setCurrentChannelId } from '../slices/modalSlice.js';
 

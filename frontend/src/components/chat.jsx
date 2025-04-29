@@ -1,17 +1,19 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 import { Button, Navbar } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import useAuth from '../contexts/useAuth.jsx';
+import Modal from '../modals/Modals.jsx';
+import routes from '../routes.js';
 import { actions as channelsAction } from '../slices/channelsSlice.js';
 import { actions as messagesAction } from '../slices/messagesSlice.js';
+
 import ChannelsBox from './channelsBox.jsx';
 import MessageBox from './messageBox.jsx';
-import Modal from '../modals/Modals.jsx';
-import useAuth from '../contexts/useAuth.jsx';
-import routes from '../routes.js';
 
 const Chat = () => {
   const location = useLocation();

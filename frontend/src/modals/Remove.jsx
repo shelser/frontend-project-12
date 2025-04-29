@@ -1,13 +1,13 @@
 import axios from 'axios';
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import useAuth from '../contexts/useAuth.jsx';
+import routes from '../routes.js';
 import { actions } from '../slices/channelsSlice.js';
 import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js';
-import routes from '../routes.js';
-import useAuth from '../contexts/useAuth.jsx';
 
 const Remove = () => {
   const currentChannelID = useSelector((state) => state.ui.currentChannelId);

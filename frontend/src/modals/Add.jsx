@@ -1,17 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useRef } from 'react';
-import * as yup from 'yup';
 import cn from 'classnames';
-import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
+import { useEffect, useRef } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import * as yup from 'yup';
+
+import useAuth from '../contexts/useAuth.jsx';
+import routes from '../routes.js';
 import { actions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
 import { closeModal, setCurrentChannelId } from '../slices/modalSlice.js';
-import routes from '../routes.js';
-import useAuth from '../contexts/useAuth.jsx';
 
 const Add = () => {
   const dispatch = useDispatch();

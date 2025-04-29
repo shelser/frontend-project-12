@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import io from 'socket.io-client';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import io from 'socket.io-client';
+
 import { actions as actionsChannels } from '../slices/channelsSlice.js';
 import { actions as actionsMessages } from '../slices/messagesSlice.js';
 

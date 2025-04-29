@@ -1,15 +1,15 @@
 import axios from 'axios';
-import React from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
 import { useFormik } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
+import { Form, InputGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { selectors } from '../slices/channelsSlice.js';
-import routes from '../routes.js';
+
 import useAuth from '../contexts/useAuth.jsx';
+import routes from '../routes.js';
+import { selectors } from '../slices/channelsSlice.js';
+import { actions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
 
 const MessageBox = () => {
   const allMessage = useSelector(messagesSelectors.selectEntities);
